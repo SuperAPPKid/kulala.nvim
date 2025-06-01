@@ -432,9 +432,12 @@ M.show_news = function()
 end
 
 M.scratchpad = function()
-  vim.cmd("e " .. GLOBALS.SCRATCHPAD_ID)
-  vim.cmd("setlocal filetype=http")
-  vim.api.nvim_buf_set_lines(0, 0, -1, false, CONFIG.get().scratchpad_default_contents)
+  local buf = vim.api.nvim_create_buf(true, true)
+  vim.api.nvim_win_set_buf(0, buf)
+  vim.api.nvim_buf_set_name(buf, GLOBALS.SCRATCHPAD_ID)
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, CONFIG.get().scratchpad_default_contents)
+  vim.api.nvim_set_option_value("filetype", "http", { buf = buf })
+  vim.api.nvim_set_option_value("buftype", "nofile", { buf = buf })
 end
 
 M.open_default_view = function()
